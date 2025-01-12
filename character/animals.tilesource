@@ -1,0 +1,33 @@
+image: "/assets/images/character/tiny_animals.png"
+tile_width: 16
+tile_height: 16
+collision_groups: "default"
+animations {
+  id: "SnakeDown"
+  start_tile: 21
+  end_tile: 24
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 8
+}
+animations {
+  id: "SnakeIdle"
+  start_tile: 4
+  end_tile: 5
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 4
+}
+animations {
+  id: "SnakeRight"
+  start_tile: 5
+  end_tile: 8
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 8
+}
+animations {
+  id: "SnakeUp"
+  start_tile: 37
+  end_tile: 40
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 8
+}
+extrude_borders: 2

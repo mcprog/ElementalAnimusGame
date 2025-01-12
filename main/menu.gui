@@ -1,0 +1,40 @@
+fonts {
+  name: "menu_font"
+  font: "/main/menu_font.font"
+}
+nodes {
+  position {
+    x: 642.0
+    y: 565.0
+  }
+  scale {
+    x: 2.0
+    y: 2.0
+  }
+  size {
+    x: 300.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "Elemental Animus Game"
+  font: "menu_font"
+  id: "Title"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 670.0
+    y: 220.0
+  }
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "Press Space to continue.."
+  font: "menu_font"
+  id: "Prompt"
+  inherit_alpha: true
+}
+material: "/builtins/materials/gui.material"
+adjust_reference: ADJUST_REFERENCE_PARENT

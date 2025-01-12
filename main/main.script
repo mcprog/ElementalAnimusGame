@@ -1,0 +1,60 @@
+
+local action_touch = hash("touch")
+local action_space = hash("space")
+local action_escape = hash("escape")
+
+local message_proxy_loaded = hash("proxy_loaded")
+local message_enable = hash("enable")
+local message_unload = hash("unload")
+local message_async_load = hash("async_load")
+
+local current_proxy
+local proxy_id = -1
+
+local proxy_id_menu = 0
+local proxy_id_world  = 1
+
+local function load_scene(self, proxy, proxy_id)
+	if self.proxy_id == proxy_id then
+		return
+	end 
+
+	print("loading proxy:" .. proxy)
+	if self.current_proxy and self.current_proxy ~= proxy then
+		
+		msg.post(self.current_proxy, message_unload)
+		self.current_proxy = nil
+		self.proxy_id = proxy_id
+	end
+	
+	msg.post(proxy, message_async_load)
+end
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	self.current_proxy = nil
+	self.proxy_id = proxy_id_menu
+	load_scene(self, "#menu_proxy")
+end
+
+
+
+function on_input(self, action_id, action)
+	if action_id == action_touch and action.pressed then
+		print("Touch!")
+	elseif action_id == action_space and action.pressed then
+		load_scene(self, "#world_proxy", proxy_id_world)
+	elseif action_id == action_escape and action.pressed then
+		if self.current_proxy and self.current_proxy ~= "[main:/go#menu_proxy]" then
+			load_scene(self, "#menu_proxy", proxy_id_menu)
+		end
+		
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == message_proxy_loaded then
+		self.current_proxy = sender
+		msg.post(sender, message_enable)
+	end
+end
