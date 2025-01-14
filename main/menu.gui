@@ -1,3 +1,4 @@
+script: "/main/menu.gui_script"
 fonts {
   name: "menu_font"
   font: "/main/menu_font.font"
@@ -23,17 +24,64 @@ nodes {
 }
 nodes {
   position {
-    x: 670.0
-    y: 220.0
+    x: 661.0
+    y: 365.0
   }
   size {
     x: 200.0
     y: 100.0
   }
+  color {
+    x: 0.702
+    y: 0.804
+    z: 0.902
+  }
+  type: TYPE_BOX
+  id: "PlayButton"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
   type: TYPE_TEXT
-  text: "Press Space to continue.."
+  text: "Play"
   font: "menu_font"
-  id: "Prompt"
+  id: "PlayText"
+  parent: "PlayButton"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 663.0
+    y: 190.0
+  }
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  color {
+    x: 0.702
+    y: 0.804
+    z: 0.902
+  }
+  type: TYPE_BOX
+  id: "QuitButton"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "Quit"
+  font: "menu_font"
+  id: "QuitText"
+  parent: "QuitButton"
   inherit_alpha: true
 }
 material: "/builtins/materials/gui.material"

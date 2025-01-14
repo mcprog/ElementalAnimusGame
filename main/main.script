@@ -1,3 +1,5 @@
+require "main.main"
+
 
 local action_touch = hash("touch")
 local action_space = hash("space")
@@ -40,21 +42,21 @@ end
 
 
 function on_input(self, action_id, action)
-	if action_id == action_touch and action.pressed then
-		print("Touch!")
-	elseif action_id == action_space and action.pressed then
-		load_scene(self, "#world_proxy", proxy_id_world)
-	elseif action_id == action_escape and action.pressed then
+	if action_id == action_escape and action.pressed then
 		if self.current_proxy and self.current_proxy ~= "[main:/go#menu_proxy]" then
 			load_scene(self, "#menu_proxy", proxy_id_menu)
+			return true
 		end
 		
 	end
+	return false
 end
 
 function on_message(self, message_id, message, sender)
 	if message_id == message_proxy_loaded then
 		self.current_proxy = sender
 		msg.post(sender, message_enable)
+	elseif message_id == MESSAGE_PLAY then
+		load_scene(self, "#world_proxy", proxy_id_world)
 	end
 end

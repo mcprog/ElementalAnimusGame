@@ -14,7 +14,7 @@ animations {
   start_tile: 4
   end_tile: 5
   playback: PLAYBACK_LOOP_FORWARD
-  fps: 4
+  fps: 2
 }
 animations {
   id: "SnakeRight"
