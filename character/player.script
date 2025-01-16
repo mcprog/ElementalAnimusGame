@@ -1,3 +1,6 @@
+require "character.characters"
+
+
 local action_up = hash("up")
 local action_left = hash("left")
 local action_down = hash("down")
@@ -25,6 +28,11 @@ function init(self)
 	self.y_dir = 0
 	self.velocity = vmath.vector3()
 	self.animation_state = animation_idle
+
+	self.lifetime = 50
+	self.timer = self.lifetime
+	local x_scale = go.get("health_bar#health_fg", "scale.x")
+	self.health_px_width = 32 * x_scale
 end
 
 function final(self)
@@ -50,6 +58,12 @@ end
 
 
 function update(self, dt)
+	self.timer = self.timer - dt
+	if self.timer < 0 then
+		go.delete()
+	end
+	update_health(self.health_px_width, go.get_position(HEALTH_BAR_GO_PATH), self.timer, self.lifetime)
+	
 	update_player_position(self, dt)
 
 end
