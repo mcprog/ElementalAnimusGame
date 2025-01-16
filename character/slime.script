@@ -1,0 +1,148 @@
+require "character.characters"
+require "utility.random"
+require "utility.math"
+
+go.property("speed", 95)
+go.property("player", hash(""))
+go.property("lifetime", SLIME_MAX_LIFETIME)
+
+local state_idle = 1
+local state_wander = 2
+local state_chase = 3
+local state_attack = 4
+local state_hit = 5
+local state_dead = 6
+
+local animation_idle = 1
+local animation_run = 2
+local animation_bite = 3
+local animation_hit = 4
+local animation_die = 5
+
+
+
+
+
+local animation_ids = { hash("SlimeIdle"), hash("SlimeRun"), hash("SlimeBite"), hash("SlimeHit"), hash("SlimeDie")  }
+
+function init(self)
+	self.player_in_range = false
+	self.state = state_idle
+	self.target_pos = nil
+	self.lifetime = math.random(SLIME_MIN_LIFETIME, SLIME_MAX_LIFETIME)
+	
+	self.timer = self.lifetime
+	local x_scale = go.get("health_bar#health_fg", "scale.x")
+	self.health_px_width = 32 * x_scale
+end
+
+function final(self)
+	-- Add finalization code here
+	-- Learn more: https://defold.com/manuals/script/
+	-- Remove this function if not needed
+end
+
+local function chase_player(self, dt)
+	local pos = go.get_position()
+	local player_pos = go.get_position(self.player)
+
+	local direction = player_pos - pos
+	direction.z = 0
+	direction = vmath.normalize(direction)
+
+	sprite.set_hflip("#sprite", direction.x > 0)
+
+	pos = pos + direction * self.speed * dt
+	return pos
+end
+
+local function start_wander(self, dt)
+	local pos = go.get_position()
+	local target_x = random_donut(15, 180)
+	local target_y = random_donut(15, 75)
+	self.target_pos = vmath.vector3(target_x, target_y, 0) + pos
+	local direction = vmath.normalize(vmath.vector3(target_x, target_y, 0))
+	sprite.set_hflip("#sprite", direction.x > 0)
+	pos = pos + direction * self.speed * dt
+	return pos
+end
+
+local function update_wander(self, dt)
+	local pos = go.get_position()
+	pos = pos + vmath.normalize(self.target_pos - pos) * self.speed * dt
+	return pos
+end
+
+local function remove_corpse(self, message_id, message, sender)
+	go.delete()
+end
+
+local function die(self)
+	sprite.play_flipbook("#sprite", animation_ids[animation_die], remove_corpse)
+end
+
+function update(self, dt)
+	if self.state == state_dead then
+		return
+	end
+	
+	self.timer = self.timer - dt
+	update_health(self.health_px_width, go.get_position(HEALTH_BAR_GO_PATH), self.timer, self.lifetime)
+
+	local last_state = self.state
+	local pos = go.get_position()
+	if self.timer <= 0 then
+		self.state = state_dead
+		die(self)
+	elseif self.player and self.player_in_range then
+		go.set_position(chase_player(self, dt))
+		
+		self.state = state_chase
+	elseif self.state == state_chase then
+
+		self.state = state_wander
+		
+		go.set_position(start_wander(self, dt))
+	elseif self.state == state_wander then
+		if vmath.length_sqr(pos - self.target_pos) < 1 then
+			
+			self.state = state_idle
+		else
+			go.set_position(update_wander(self, dt))
+		end
+	end
+
+	if self.state ~= last_state then
+		if self.state == state_chase then
+			sprite.play_flipbook("#sprite", animation_ids[animation_run])
+		elseif self.state == state_idle then
+			sprite.play_flipbook("#sprite", animation_ids[animation_idle])
+		end
+	end
+
+	
+end
+
+function fixed_update(self, dt)
+	-- This function is called if 'Fixed Update Frequency' is enabled in the Engine section of game.project
+	-- Can be coupled with fixed updates of the physics simulation if 'Use Fixed Timestep' is enabled in
+	-- Physics section of game.project
+	-- Add update code here
+	-- Learn more: https://defold.com/manuals/script/
+	-- Remove this function if not needed
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Learn more: https://defold.com/manuals/message-passing/
+	-- Remove this function if not needed
+	if message_id == TRIGGER_MESSAGE then
+		self.player_in_range = message.enter
+	end
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Learn more: https://defold.com/manuals/hot-reload/
+	-- Remove this function if not needed
+end

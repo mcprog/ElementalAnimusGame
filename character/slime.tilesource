@@ -1,0 +1,156 @@
+image: "/assets/images/character/green_slime.png"
+tile_width: 32
+tile_height: 25
+collision: "/assets/images/character/green_slime.png"
+convex_hulls {
+  index: 0
+  count: 8
+  collision_group: "enemy"
+}
+convex_hulls {
+  index: 8
+  count: 9
+  collision_group: "enemy"
+}
+convex_hulls {
+  index: 17
+  count: 8
+  collision_group: "enemy"
+}
+convex_hulls {
+  index: 25
+  count: 8
+  collision_group: "enemy"
+}
+convex_hulls {
+  index: 33
+  count: 9
+  collision_group: "enemy"
+}
+convex_hulls {
+  index: 42
+  count: 8
+  collision_group: "enemy"
+}
+convex_hulls {
+  index: 50
+  count: 9
+  collision_group: "enemy"
+}
+convex_hulls {
+  index: 59
+  count: 8
+  collision_group: "enemy"
+}
+convex_hulls {
+  index: 67
+  count: 8
+  collision_group: "enemy"
+}
+convex_hulls {
+  index: 75
+  count: 8
+  collision_group: "enemy"
+}
+convex_hulls {
+  index: 83
+  count: 9
+  collision_group: "enemy"
+}
+convex_hulls {
+  index: 92
+  count: 10
+  collision_group: "enemy"
+}
+convex_hulls {
+  index: 102
+  count: 10
+  collision_group: "enemy"
+}
+convex_hulls {
+  index: 112
+  count: 9
+  collision_group: "enemy"
+}
+convex_hulls {
+  index: 121
+  count: 9
+  collision_group: "enemy"
+}
+convex_hulls {
+  index: 130
+  count: 8
+  collision_group: "enemy"
+}
+convex_hulls {
+  index: 138
+  count: 8
+  collision_group: "enemy"
+}
+convex_hulls {
+  index: 146
+  count: 9
+  collision_group: "enemy"
+}
+convex_hulls {
+  index: 155
+  count: 9
+  collision_group: "enemy"
+}
+convex_hulls {
+  index: 164
+  count: 8
+  collision_group: ""
+}
+convex_hulls {
+  index: 172
+  count: 4
+  collision_group: ""
+}
+convex_hulls {
+  index: 176
+  count: 0
+  collision_group: ""
+}
+convex_hulls {
+  index: 176
+  count: 0
+  collision_group: ""
+}
+convex_hulls {
+  index: 176
+  count: 0
+  collision_group: ""
+}
+collision_groups: "enemy"
+animations {
+  id: "SlimeBite"
+  start_tile: 9
+  end_tile: 12
+}
+animations {
+  id: "SlimeDie"
+  start_tile: 17
+  end_tile: 21
+  fps: 8
+}
+animations {
+  id: "SlimeHit"
+  start_tile: 13
+  end_tile: 16
+}
+animations {
+  id: "SlimeIdle"
+  start_tile: 1
+  end_tile: 4
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 8
+}
+animations {
+  id: "SlimeRun"
+  start_tile: 5
+  end_tile: 8
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 8
+}
+extrude_borders: 2

@@ -1,11 +1,25 @@
 
-local player = nil
-
-local player_go = hash("/player")
+require "character.characters"
 
 local function spawn_player(self, pos)
 	local ids = collectionfactory.create("#player_spawner", pos)
-	self.player = ids[player_go]
+	self.player = ids[PLAYER_GO]
+	print("player_id: " .. self.player)
+end
+
+local function spawn_slime(self, pos)
+	local ids = collectionfactory.create("#slime_spawner", pos)
+	local slime_script_url = msg.url(nil, ids[SLIME_GO], "slime")
+	go.set(slime_script_url, "player", self.player)
+end
+
+local function spawn_enemies(self)
+	for i = 1, 15 do
+		local rand_x = math.random(0, 1080)
+		local rand_y = math.random(0, 720)
+		spawn_slime(self, vmath.vector3(rand_x,  rand_y, 1))
+		
+	end
 end
 
 function init(self)
@@ -15,6 +29,9 @@ function init(self)
 	if not self.player then
 		spawn_player(self, vmath.vector3(200, 200, 1))
 	end
+
+	spawn_enemies(self)
+	
 end
 
 function final(self)

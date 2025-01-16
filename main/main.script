@@ -1,5 +1,5 @@
 require "main.main"
-
+require "utility.random"
 
 local action_touch = hash("touch")
 local action_space = hash("space")
@@ -34,6 +34,8 @@ end
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
+	setup_random()
+	
 	self.current_proxy = nil
 	self.proxy_id = proxy_id_menu
 	load_scene(self, "#menu_proxy")

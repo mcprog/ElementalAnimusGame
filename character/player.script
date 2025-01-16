@@ -6,10 +6,10 @@ local action_right = hash("right")
 local half_root_2 = math.sqrt(2) / 2.0
 
 
-ANIMATION_IDLE = 1
-ANIMATION_RIGHT = 2
-ANIMATION_DOWN = 3
-ANIMATION_UP = 4
+local animation_idle = 1
+local animation_right = 2
+local animation_down = 3
+local animmation_up = 4
 
 local animation_ids = { hash("SnakeIdle"), hash("SnakeRight"), hash("SnakeDown"), hash("SnakeUp")  }
 
@@ -24,7 +24,7 @@ function init(self)
 	self.x_dir = 0
 	self.y_dir = 0
 	self.velocity = vmath.vector3()
-	self.animation_state = ANIMATION_IDLE
+	self.animation_state = animation_idle
 end
 
 function final(self)
@@ -65,17 +65,17 @@ local function handle_animations(self)
 		sprite.set_hflip("#sprite", self.x_dir < 0)
 	end
 
-	local new_animation_state = -1
+	local new_animation_state
 	if self.x_dir == 0 then
 		if self.y_dir == 0 then
-			new_animation_state = ANIMATION_IDLE
+			new_animation_state = animation_idle
 		elseif self.y_dir > 0 then
-			new_animation_state = ANIMATION_UP
+			new_animation_state = animmation_up
 		else
-			new_animation_state = ANIMATION_DOWN
+			new_animation_state = animation_down
 		end
 	else
-		new_animation_state = ANIMATION_RIGHT
+		new_animation_state = animation_right
 	end
 
 	if new_animation_state ~= self.animation_state then

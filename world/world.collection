@@ -1,7 +1,7 @@
 name: "world"
 scale_along_z: 0
 embedded_instances {
-  id: "go"
+  id: "world_controller"
   data: "components {\n"
   "  id: \"worldmap\"\n"
   "  component: \"/world/worldmap.tilemap\"\n"
@@ -14,6 +14,12 @@ embedded_instances {
   "  id: \"player_spawner\"\n"
   "  type: \"collectionfactory\"\n"
   "  data: \"prototype: \\\"/character/player.collection\\\"\\n"
+  "\"\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"slime_spawner\"\n"
+  "  type: \"collectionfactory\"\n"
+  "  data: \"prototype: \\\"/character/slime.collection\\\"\\n"
   "\"\n"
   "}\n"
   ""
