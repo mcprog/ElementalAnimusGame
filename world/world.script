@@ -1,5 +1,40 @@
-
 require "character.characters"
+local perlin = require "utility.perlin"
+
+local grass_tile = 31
+local dirt_tile = 21
+local dark_grass_tile = 73
+local water_tile = 109
+
+local tile_size = 16
+
+local base_layer = hash("base")
+local fg_layer = hash("fg")
+local mid_layer = hash("mid")
+local bg_layer = hash("bg")
+
+local tile_codes = { gggg = grass_tile, gggd = 33, ggdg = 34, gdgg = 19, dggg = 20, ggdd = 17, ddgg = 45, gdgd = 32, dgdg = 30, 
+gddd = 18, dgdd = 16, ddgd = 46, dddg = 44, dddd = dirt_tile,
+gggw = 120, ggwg = 122, gwgg = 92, wggg = 94, ggww = 121, wwgg = 93, gwgw = 106, wgwg = 108,
+gwww = 105, wgww = 104, wwgw = 119, wwwg = 118, wwww = water_tile }
+
+
+	
+
+local base_map_path = "#base_map"
+local world_map_path = "#world_map"
+
+local function get_acronym(tile)
+	if tile == grass_tile then
+		return "g"
+	elseif tile == dirt_tile then
+		return "d"
+	elseif tile == water_tile then
+		return "w"
+	end
+
+	return "g"
+end
 
 local function spawn_player(self, pos)
 	local ids = collectionfactory.create("#player_spawner", pos)
@@ -22,12 +57,87 @@ local function spawn_enemies(self)
 	end
 end
 
+local function generate_tilemap(start_tile_x, start_tile_y, px_width, px_height)
+	for x = 1, math.ceil(px_width / tile_size) + 1 do
+		for y = 1, math.ceil(px_height / tile_size) + 1 do
+			local perlin_y = perlin.noise((start_tile_x + x) / 10, (start_tile_y + y) / 10, 0.3)
+			local tile = water_tile
+			if perlin_y < -.15 then
+				tile = dirt_tile
+				tilemap.set_tile(base_map_path, base_layer, x, y, tile)
+			elseif perlin_y < .05 then
+				tile = grass_tile
+				tilemap.set_tile(base_map_path, base_layer, x, y, tile)
+			elseif perlin_y < .15 then
+				tile = grass_tile
+				tilemap.set_tile(base_map_path, base_layer, x, y, tile)
+			else
+				tile = water_tile
+				tilemap.set_tile(base_map_path, base_layer, x, y, tile)
+			end
+		end	
+
+	end
+end
+
+local function determine_tile(self, x, y, width, height, current_tile)
+	if x <= 1 or x >= width - 1 or y <= 1 or y >= height - 1 then
+		local east = current_tile
+		local south = current_tile
+		local se = current_tile
+
+		if x == 1 then
+			east = tilemap.get_tile(base_map_path, base_layer, x + 1, y)
+			if y == 1 then
+				se = tilemap.get_tile(base_map_path, base_layer, x + 1, y + 1)
+			end
+		end
+		if y == 1 then
+			south = tilemap.get_tile(base_map_path, base_layer, x, y + 1)
+		end
+		if x < width then
+			east = tilemap.get_tile(base_map_path, base_layer, x + 1, y)
+			if y < height then
+				se = tilemap.get_tile(base_map_path, base_layer, x + 1, y + 1)
+			end
+		end
+		if y < height then
+			south = tilemap.get_tile(base_map_path, base_layer, x, y + 1)
+		end
+
+		local code = get_acronym(current_tile) .. get_acronym(east) .. get_acronym(south) .. get_acronym(se)
+		return tile_codes[code]
+	end
+	
+	local east = tilemap.get_tile(base_map_path, base_layer, x + 1, y)
+	local south = tilemap.get_tile(base_map_path, base_layer, x, y + 1)
+	local se = tilemap.get_tile(base_map_path, base_layer, x + 1, y + 1)
+	local code = get_acronym(current_tile) .. get_acronym(east) .. get_acronym(south) .. get_acronym(se)
+
+	return tile_codes[code]
+end
+
+local function auto_tile(self)
+	local x, y, w, h = tilemap.get_bounds(base_map_path)
+	for i = x, w do
+		for j = y, h do
+			local current_tile = tilemap.get_tile(base_map_path, base_layer, i, j)
+			local new_tile = determine_tile(self, i, j, w, h, current_tile)
+			
+			if new_tile and new_tile ~= 0 then
+				tilemap.set_tile(world_map_path, bg_layer, i, j, new_tile)
+			end
+		end
+	end
+end
+
 function init(self)
-	-- Add initialization code here
-	-- Learn more: https://defold.com/manuals/script/
-	-- Remove this function if not needed
+	perlin.init()
+	self.auto_tiled_tiles = {}
+	generate_tilemap(0, 0, 1100, 590)
+	auto_tile(self)
 	if not self.player then
-		spawn_player(self, vmath.vector3(200, 200, 1))
+		spawn_player(self, vmath.vector3(600, 400, 1))
 	end
 
 	spawn_enemies(self)

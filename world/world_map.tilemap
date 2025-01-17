@@ -1,0 +1,34 @@
+tile_set: "/world/grass.tilesource"
+layers {
+  id: "bg"
+  z: 0.0
+  cell {
+    x: 0
+    y: 0
+    tile: 30
+  }
+  cell {
+    x: 74
+    y: 0
+    tile: 30
+  }
+  cell {
+    x: 0
+    y: 37
+    tile: 30
+  }
+  cell {
+    x: 0
+    y: 49
+    tile: 30
+  }
+}
+layers {
+  id: "mid"
+  z: 0.5
+}
+layers {
+  id: "fg"
+  z: 1.0
+}
+material: "/builtins/materials/tile_map.material"
