@@ -1,0 +1,40 @@
+require "utility.math"
+go.property("direction", vmath.vector3())
+go.property("speed", 350)
+go.property("damage", 5)
+go.property("lifetime", 8)
+go.property("sprite_rotation", -90)
+
+
+
+function init(self)
+	self.direction = vmath.normalize(self.direction)
+	self.timer = self.lifetime
+	local rot = math.atan2(self.direction.y, self.direction.x)
+	rot = math.deg(rot) - 90
+	go.set(".", "euler.z", rot)
+end
+
+function update(self, dt)
+	self.timer = self.timer - dt
+	if self.timer < 0 then
+		go.delete()
+	end
+	
+	local pos = go.get_position()
+	pos.x = pos.x + self.direction.x * self.speed * dt
+	pos.y = pos.y + self.direction.y * self.speed * dt
+	go.set_position(pos)
+	
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == COLLISION_MESSAGE then
+		if message.other_group == GROUP_ENEMIES then
+			msg.post(message.other_id, HURT, { damage = self.damage })
+			go.delete()
+		end
+
+	end
+end
+

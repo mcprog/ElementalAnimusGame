@@ -3,9 +3,3 @@
 -- require "my_directory.my_file"
 -- in any script using the functions.
 E = 0.001
-
-function vector_add(one, two)
-	one.z = 0
-	two.z = 0
-	return one + two
-end

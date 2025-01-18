@@ -100,14 +100,10 @@ function update(self, dt)
 	if self.state == state_attack then
 		return
 	end
-	update_health(self.health_px_width, go.get_position(HEALTH_BAR_GO_PATH), self.timer, self.lifetime)
 
 	local last_state = self.state
 	local pos = go.get_position()
-	if self.timer <= 0 then
-		self.state = state_dead
-		die(self)
-	elseif self.player and self.player_in_range then
+	if self.player and self.player_in_range then
 		go.set_position(chase_player(self, dt))
 		
 		self.state = state_chase
@@ -166,13 +162,15 @@ function on_message(self, message_id, message, sender)
 		end
 
 	elseif message_id == HURT then
-		
-		if self.i_timer > 0 then
+		if self.i_timer > 0 or self.state == state_dead then
 				return
 		end
 		self.health = self.health - message.damage
-		if self.health < 0 then
-				self.health = 0
+		if self.health <= 0 then
+			self.state = state_dead
+			update_health(self.health_px_width, go.get_position(HEALTH_BAR_GO_PATH), 0, max_health)
+			die(self)
+			return
 		end
 		self.i_timer = iframe_delay
 		update_health(self.health_px_width, go.get_position(HEALTH_BAR_GO_PATH), self.health, max_health)

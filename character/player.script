@@ -1,10 +1,10 @@
 require "character.characters"
 
-
 local action_up = hash("up")
 local action_left = hash("left")
 local action_down = hash("down")
 local action_right = hash("right")
+local action_shoot = hash("space")
 
 local half_root_2 = math.sqrt(2) / 2.0
 
@@ -20,10 +20,10 @@ go.property("speed", 215)
 local max_health = 100
 local iframe_delay = 0.2
 
+local projectile_offset = 15
+local shoot_delay = 0.65
+
 function init(self)
-	-- Add initialization code here
-	-- Learn more: https://defold.com/manuals/script/
-	-- Remove this function if not needed
 	msg.post(".", "acquire_input_focus")
 
 	self.x_dir = 0
@@ -32,15 +32,15 @@ function init(self)
 	self.animation_state = animation_idle
 	self.health = max_health
 	self.i_timer = 0
+	self.facing = 1
+	self.shoot_timer = 0
 
 	local x_scale = go.get("health_bar#health_fg", "scale.x")
 	self.health_px_width = 32 * x_scale
 end
 
 function final(self)
-	-- Add finalization code here
-	-- Learn more: https://defold.com/manuals/script/
-	-- Remove this function if not needed
+	msg.post(".", "release_input_focus")
 end
 
 local function update_player_position(self, dt)
@@ -63,6 +63,9 @@ function update(self, dt)
 	if self.i_timer > 0 then
 		self.i_timer = self.i_timer - dt
 	end
+	if self.shoot_timer > 0 then
+		self.shoot_timer = self.shoot_timer - dt
+	end
 	update_player_position(self, dt)
 end
 
@@ -71,7 +74,6 @@ function on_message(self, message_id, message, sender)
 		if self.i_timer > 0 then
 			return
 		end
-		print("player recieved hurt message")
 		self.health = self.health - message.damage
 		if self.health < 0 then
 			self.health = 0
@@ -84,6 +86,7 @@ end
 
 local function handle_animations(self)
 	if self.x_dir ~= 0 then
+		self.facing = self.x_dir
 		sprite.set_hflip("#sprite", self.x_dir < 0)
 	end
 
@@ -131,14 +134,22 @@ function on_input(self, action_id, action)
 		elseif action.released then
 			self.x_dir = self.x_dir - 1
 		end
+	elseif action_id == action_shoot and action.pressed then
+		if self.shoot_timer > 0 then
+			return
+		end
+		local spawn_pos = go.get_position()
+		spawn_pos.x = spawn_pos.x + self.x_dir * projectile_offset
+		spawn_pos.y = spawn_pos.y + self.y_dir * projectile_offset
+		local direction = vmath.vector3(self.x_dir, self.y_dir, 0)
+		if self.x_dir == 0 and self.y_dir == 0 then
+			direction.x = self.facing
+		end
+
+		self.shoot_timer = shoot_delay
+		local id = factory.create("#poison_spawner", spawn_pos, nil, { direction = direction })
 	end
 
 	handle_animations(self)
 	
-end
-
-function on_reload(self)
-	-- Add reload-handling code here
-	-- Learn more: https://defold.com/manuals/hot-reload/
-	-- Remove this function if not needed
 end
