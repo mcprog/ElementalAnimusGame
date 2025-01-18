@@ -4,6 +4,7 @@ instances {
   prototype: "/character/health_bar.go"
   position {
     y: 11.0
+    z: 0.5
   }
 }
 scale_along_z: 0
@@ -35,6 +36,7 @@ embedded_instances {
   "group: \\\"player\\\"\\n"
   "mask: \\\"enemies\\\"\\n"
   "mask: \\\"projectiles\\\"\\n"
+  "mask: \\\"enemies_trigger\\\"\\n"
   "embedded_collision_shape {\\n"
   "  shapes {\\n"
   "    shape_type: TYPE_SPHERE\\n"
@@ -70,6 +72,7 @@ embedded_instances {
   "\"\n"
   "  position {\n"
   "    y: 11.0\n"
+  "    z: 0.5\n"
   "  }\n"
   "  scale {\n"
   "    x: 0.6\n"
@@ -84,6 +87,13 @@ embedded_instances {
   "near_z: -10.0\\n"
   "far_z: 10.0\\n"
   "orthographic_projection: 1\\n"
+  "\"\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"sound_hurt\"\n"
+  "  type: \"sound\"\n"
+  "  data: \"sound: \\\"/assets/sounds/hurt.ogg\\\"\\n"
+  "group: \\\"sfx\\\"\\n"
   "\"\n"
   "}\n"
   ""

@@ -19,7 +19,12 @@ local animation_bite = 3
 local animation_hit = 4
 local animation_die = 5
 
+local detection_area = hash("detection_area")
 
+local attack_delay = 1.7
+local iframe_delay = 0.2
+
+local max_health = 30
 
 
 
@@ -30,21 +35,22 @@ function init(self)
 	self.state = state_idle
 	self.target_pos = nil
 	self.lifetime = math.random(SLIME_MIN_LIFETIME, SLIME_MAX_LIFETIME)
+	self.health = max_health
 	
 	self.timer = self.lifetime
+	self.i_timer = 0
 	local x_scale = go.get("health_bar#health_fg", "scale.x")
 	self.health_px_width = 32 * x_scale
-end
-
-function final(self)
-	-- Add finalization code here
-	-- Learn more: https://defold.com/manuals/script/
-	-- Remove this function if not needed
+	self.attack_timer = 0
 end
 
 local function chase_player(self, dt)
 	local pos = go.get_position()
 	local player_pos = go.get_position(self.player)
+
+	if vmath.length_sqr(pos - player_pos) < 125 then
+		return pos
+	end
 
 	local direction = player_pos - pos
 	direction.z = 0
@@ -87,6 +93,13 @@ function update(self, dt)
 	end
 	
 	self.timer = self.timer - dt
+	self.attack_timer = self.attack_timer - dt
+	if self.i_timer > 0 then
+		self.i_timer = self.i_timer - dt
+	end
+	if self.state == state_attack then
+		return
+	end
 	update_health(self.health_px_width, go.get_position(HEALTH_BAR_GO_PATH), self.timer, self.lifetime)
 
 	local last_state = self.state
@@ -123,12 +136,46 @@ function update(self, dt)
 	
 end
 
+local function calculate_damage(self)
+	return 5
+end
+
+local function finish_attack(self, message_id, message, sender)
+	self.state = state_wander
+end
+
+local function attack(self, receiver_id)
+	if self.state == state_attack or self.attack_timer > 0 then
+		print("already attacked in attack state")
+		return
+	end
+
+	self.attack_timer = attack_delay
+	msg.post(receiver_id, HURT, { damage = calculate_damage(self)})
+	self.state = state_attack
+	print("attack state activated")
+	sprite.play_flipbook("#sprite", animation_ids[animation_bite], finish_attack)
+end
 
 function on_message(self, message_id, message, sender)
-	-- Add message-handling code here
-	-- Learn more: https://defold.com/manuals/message-passing/
-	-- Remove this function if not needed
 	if message_id == TRIGGER_MESSAGE then
 		self.player_in_range = message.enter
+	elseif message_id == COLLISION_MESSAGE then
+		if message.other_group == GROUP_PLAYER and message.own_group == GROUP_ENEMIES then
+			attack(self, message.other_id)
+		end
+
+	elseif message_id == HURT then
+		
+		if self.i_timer > 0 then
+				return
+		end
+		self.health = self.health - message.damage
+		if self.health < 0 then
+				self.health = 0
+		end
+		self.i_timer = iframe_delay
+		update_health(self.health_px_width, go.get_position(HEALTH_BAR_GO_PATH), self.health, max_health)
+		
 	end
 end

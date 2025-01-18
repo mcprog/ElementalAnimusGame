@@ -5,6 +5,11 @@ HEALTH_BAR_GO_PATH = "health_bar"
 COLLISION_MESSAGE = hash("collision_response")
 TRIGGER_MESSAGE = hash("trigger_response")
 UPDATE_HEALTH = hash("update_health")
+HURT = hash("hurt")
+
+GROUP_PLAYER = hash("player")
+GROUP_ENEMIES_TRIGGER = hash("enemies_trigger")
+GROUP_ENEMIES = hash("enemies")
 
 SLIME_MAX_LIFETIME = 30
 SLIME_MIN_LIFETIME = 10
