@@ -1,0 +1,38 @@
+go.property("shift_bg", 50)
+go.property("shift_mid1", 35)
+go.property("shift_mid2", 15)
+go.property("shift_fg", 10)
+
+function init(self)
+	-- Add initialization code here
+	-- Learn more: https://defold.com/manuals/script/
+	-- Remove this function if not needed
+	msg.post(".", "acquire_input_focus")
+end
+
+function final(self)
+	-- Add finalization code here
+	-- Learn more: https://defold.com/manuals/script/
+	-- Remove this function if not needed
+	msg.post(".", "release_input_focus")
+end
+
+local function offset_layer(self, sprite_id, offset_x)
+	local sprite_pos = go.get_position(sprite_id)
+	sprite_pos.x = offset_x
+	go.set(sprite_id, "position", sprite_pos)
+	--go.set_position(sprite_pos, sprite_id)
+end
+
+function on_input(self, action_id, action)
+	if not action_id then -- mouse move gives action_id = nil
+		local width, height = window.get_size()
+		local half_width = width / 2
+		print("action.x: " .. action.x .. " width: " .. width)
+		local factor = (action.x + half_width)  / half_width
+		offset_layer(self, "bg", factor * self.shift_bg)
+		offset_layer(self, "mid1", factor * self.shift_mid1)
+		offset_layer(self, "mid2", factor * self.shift_mid2)
+		offset_layer(self, "fg", factor * self.shift_fg)
+	end
+end

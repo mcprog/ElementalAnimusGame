@@ -1,0 +1,4 @@
+images {
+  image: "/assets/images/menu/dark_background/dark_background.png"
+}
+extrude_borders: 2

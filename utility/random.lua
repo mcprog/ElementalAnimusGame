@@ -13,3 +13,7 @@ function random_donut(min, max)
 	end
 	return value
 end
+
+function choose_random(choices_table)
+	return choices_table[math.random(#choices_table)]
+end

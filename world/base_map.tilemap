@@ -1,27 +1,21 @@
-tile_set: "/world/grass.tilesource"
+tile_set: "/world/background.tilesource"
 layers {
   id: "base"
   z: -1.0
-  is_visible: 0
   cell {
     x: 0
     y: 0
-    tile: 30
+    tile: 0
   }
   cell {
-    x: 74
+    x: 100
     y: 0
-    tile: 30
-  }
-  cell {
-    x: 74
-    y: 1
-    tile: 30
+    tile: 0
   }
   cell {
     x: 0
-    y: 49
-    tile: 30
+    y: 63
+    tile: 0
   }
 }
 material: "/builtins/materials/tile_map.material"

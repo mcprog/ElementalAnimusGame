@@ -1,0 +1,33 @@
+name: "death_menu"
+scale_along_z: 0
+embedded_instances {
+  id: "go"
+  data: "components {\n"
+  "  id: \"death_menu\"\n"
+  "  component: \"/main/death_menu.gui\"\n"
+  "}\n"
+  ""
+}
+embedded_instances {
+  id: "background"
+  data: "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"dark_background\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/main/death_menu.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: 738.0
+    y: 359.0
+  }
+  scale3 {
+    x: 0.5
+    y: 0.5
+  }
+}

@@ -1,0 +1,133 @@
+fonts {
+  name: "menu_font"
+  font: "/main/menu_font.font"
+}
+nodes {
+  position {
+    x: 663.0
+    y: 583.0
+  }
+  scale {
+    x: 2.0
+    y: 2.0
+  }
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "Death"
+  font: "menu_font"
+  id: "Title"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 663.0
+    y: 485.0
+  }
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "You died (that\'s unfortunate)"
+  font: "menu_font"
+  id: "Subtitle"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 661.0
+    y: 365.0
+  }
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  color {
+    x: 0.702
+    y: 0.804
+    z: 0.902
+  }
+  type: TYPE_BOX
+  id: "RespawnButton"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "Respawn"
+  font: "menu_font"
+  id: "RespawnText"
+  parent: "RespawnButton"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 661.0
+    y: 237.0
+  }
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  color {
+    x: 0.702
+    y: 0.804
+    z: 0.902
+  }
+  type: TYPE_BOX
+  id: "MainMenuButton"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "Main Menu"
+  font: "menu_font"
+  id: "MainMenuText"
+  parent: "MainMenuButton"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 661.0
+    y: 93.0
+  }
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  color {
+    x: 0.702
+    y: 0.804
+    z: 0.902
+  }
+  type: TYPE_BOX
+  id: "Quit Button"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "Quit"
+  font: "menu_font"
+  id: "QuitButtonText"
+  parent: "Quit Button"
+  inherit_alpha: true
+}
+material: "/builtins/materials/gui.material"
+adjust_reference: ADJUST_REFERENCE_PARENT
